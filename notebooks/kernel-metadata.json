@@ -1,0 +1,15 @@
+{
+  "id": "mmarschn/INSERT_KERNEL_SLUG_HERE",
+  "title": "inpainting_v01",
+  "code_file": "inpainting_v01.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": "false",
+  "enable_internet": "true",
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}
