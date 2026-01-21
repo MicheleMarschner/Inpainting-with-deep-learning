@@ -1,1 +1,12 @@
-./datasets
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+checkpoints/
+runs/
+wandb/
+datasets/
+img/
+.DS_Store
+.env
+notebooks/wandb
+notebooks/old
