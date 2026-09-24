@@ -86,53 +86,6 @@ def compute_dataset_mean_std(
     return mean.tolist(), std.tolist()
 
 
-def unnormalize(x, mean, std):
-    """
-    Inverse of torchvision.transforms.Normalize for images shaped (B,3,H,W) or (3,H,W).
-    mean/std can be list/tuple or torch.Tensor.
-    """
-    was_3d = (x.dim() == 3)   
-
-    if was_3d:
-        x = x.unsqueeze(0)  # (1,3,H,W)
-
-    mean_t = torch.as_tensor(mean, device=x.device, dtype=x.dtype).view(1, 3, 1, 1)
-    std_t  = torch.as_tensor(std,  device=x.device, dtype=x.dtype).view(1, 3, 1, 1)
-
-    out = x * std_t + mean_t
-
-    return out.squeeze(0) if was_3d else out
-
-
-def get_train_stats(dir, batch_size, dataset):
-    out_dir = dir / "outputs"
-    stats_path = out_dir / "train_stats.json"
-
-    if stats_path.exists():
-        print("Load from file...")
-
-        with open(stats_path, "r") as f:
-            stats = json.load(f)
-
-        MEAN = stats["mean"]
-        STD = stats["std"]
-
-    else:
-        # Calculates mean and standard deviation of the rgb train data
-        # for different dataset (or change in train data) recalculate mean and standard deviation
-        MEAN, STD = compute_dataset_mean_std(dataset, batch_size=batch_size)
-        print(MEAN, STD)
-        
-        # persist computed stats (mean/std) for reproducibility
-        out_dir.mkdir(exist_ok=True)
-
-        with open(out_dir / "train_stats.json", "w") as f:
-            json.dump({"mean": MEAN, "std": STD}, f, indent=2)
-
-        
-    return MEAN, STD
-
-
 def format_time(seconds):
     """
     Convert a duration in seconds to a human-readable 'MMm SSs' string.
