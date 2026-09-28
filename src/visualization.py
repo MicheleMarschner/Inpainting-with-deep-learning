@@ -59,7 +59,7 @@ def show_img_grid(
         x = tensor.detach().cpu()
 
         if x.dim() == 4:
-            x.squeeze(0)
+            x = x.squeeze(0)
         
         # RGB image
         if x.dim() == 3 and x.size(0) == 4:
@@ -155,9 +155,9 @@ def show_norm_img_grid(
     return fig, ax
 
 
-def plot_val_losses(loss_dict, title="Validation Loss per Model", figsize=(8,5)):
+def plot_losses(loss_dict, title="Validation Loss per Model", ylabel="Validation Loss",figsize=(8,5)):
     """
-    Plots validation loss curves for multiple models for comparison.
+    Plots loss curves for multiple models for comparison.
     """
     fig, ax = plt.subplots(figsize=figsize)
     
@@ -166,10 +166,25 @@ def plot_val_losses(loss_dict, title="Validation Loss per Model", figsize=(8,5))
 
     ax.set_title(title)
     ax.set_xlabel("Epoch")
-    ax.set_ylabel("Validation Loss")
+    ax.set_ylabel(ylabel)
     ax.legend()
     ax.grid(True, alpha=0.3)
     fig.tight_layout()
 
     return fig, ax
 
+
+def plot_tuning_curves(results_log, title="Tuning: Validation MAE per Config", cut=None):
+    """Overlay each config's per-epoch val MAE, to check the ranking is stable at the cut."""
+    fig, ax = plt.subplots(figsize=(8, 5))
+    for run in results_log:
+        label = ", ".join(f"{k}={v}" for k, v in run["config"].items() if k != "epochs")
+        ax.plot(range(1, len(run["curve"]) + 1), run["curve"], marker="o", label=label)
+    if cut is not None:
+        ax.axvline(cut, ls="--", color="gray", alpha=0.7, label=f"cut @ {cut}")
+    ax.set_title(title)
+    ax.set_xlabel("Epoch"); ax.set_ylabel("Val MAE_miss")
+    ax.legend(); ax.grid(True, alpha=0.3)
+    plt.tight_layout()
+
+    return fig, ax

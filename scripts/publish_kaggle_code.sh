@@ -26,3 +26,15 @@ kaggle datasets version \
   -m "$MESSAGE"
 
 echo "✅ Done."
+
+
+
+'''
+kaggle datasets version -p "/Users/MicheleMarschner/Documents/Uni/WiSe_2025_26/MLII/Inpainting-with-deep-learning" \
+  -m "update code" \
+  -r zip \
+  --ignore-patterns ".venv/" \
+  --ignore-patterns "data/" \
+  --ignore-patterns "checkpoints/" \
+  --ignore-patterns "outputs/"
+'''
